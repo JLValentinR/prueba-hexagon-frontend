@@ -1,0 +1,30 @@
+button{
+	background-color: #FFFFFF;
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.contenedor{
+	height: 100vh;
+	background-color: #FFFFFF;
+}
+
+.nuevosegmento{
+	background-color: #59AFE2;
+	text-decoration: none;
+	color: #FFFFFF;
+	padding: 15px;
+}
+
+.nuevosegmento:hover{
+	text-decoration: none;
+	color: #FFFFFF;
+}
+
+#buscar{
+	width: calc(100% - 25px);
+	height: 50px;
+	padding: 10px;
+	border: 0;
+}

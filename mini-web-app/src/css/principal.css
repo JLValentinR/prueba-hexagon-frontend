@@ -1,0 +1,19 @@
+body{
+	margin: 0;
+}
+
+a{
+	text-decoration: underline;
+}
+
+.principal{
+	background-color: #FFFFFF;
+}
+
+.sinpadding{
+	padding: 0;
+}
+
+.sinmargin{
+	margin: 0;
+}
