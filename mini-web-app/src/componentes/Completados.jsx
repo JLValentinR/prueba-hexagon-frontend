@@ -8,9 +8,29 @@ import opciones from '../img/opciones.png';
 import Perfil from './Perfil';
 import Favoritos from './Favoritos';
 
+const { completados } = { "completados": [] };
+
+let x = 1;
+
+function fecha(params){
+  if (params < 10) {
+    params = '0' + params;
+  }
+  return params;
+}
+
+function _xuma(a){ return document.getElementById(a); }
+
 class Completados extends Component {
   constructor(props){
     super(props);
+
+    this.state = {
+      completados,
+      paginacion: 0,
+      menor: 0,
+      limite: 5
+    }
 
     this.handlerMostrar = this.handlerMostrar.bind(this);
   }
@@ -19,149 +39,79 @@ class Completados extends Component {
     this.props.onMostrar(count);
   }
 
+  componentWillReceiveProps(props){
+    this.setState({
+      completados: [...props.onCompletados],
+      paginacion: Math.trunc(props.onCompletados.length / 5),
+      menor: 0,
+      limite: 5
+    });
+  }
+
+  handlerLimite(a){
+    this.setState({
+      menor: ((a * 5) - 5),
+      limite: a * 5
+    });
+  }
+
   render(){
     let tamano = { width: '25px', height: '25px', background: '#FFFFFF', borderRadius: '50%' };
 
+    const drawHpBar=function(hp){
+      let incre = 0;
+      let result = [];
+
+      if((this.state.paginacion * 5) == this.state.completados.length){
+        incre = this.state.paginacion;
+      }else{
+        incre = this.state.paginacion + 1;
+      }
+
+      for(x = 1; x <= incre; x ++){
+        result.push(<a href='#segmentos' className='pag' onClick={this.handlerLimite.bind(this, x)} key={x}>{x}</a>);
+      }
+
+      return result;
+    }.bind(this)();
+
+    const completados = this.state.completados.map((completado, i) => {
+      const fsubida = new Date(completado.subida);
+      const fmodificacion = new Date(completado.modificacion);
+
+      if(i >= this.state.menor && i < this.state.limite){
+        return (
+          <div className="row align-items-center marginshadow sinmargin" key={i}>
+            <a href="#?" className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding"><img src={ficono2} style={tamano} /></a>
+            <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
+            <div className="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 sinpadding">
+              <div className="row sinmargin">
+                <div className="col-12 nombrefavorito sinpadding" style={{ fontSize: '0.9em' }}>{completado.nombre}</div>
+                <div className="col-12 nombrefavorito sinpadding">{completado.descripcion}</div>
+              </div>
+            </div>
+            <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
+            <div className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding">{completado.matchs}%</div>
+            <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
+            <div className="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 sinpadding">{fecha(fsubida.getFullYear()) + '/' + fecha(fsubida.getMonth()+1) + '/' + fecha(fsubida.getDate())}</div>
+            <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
+            <div className="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 sinpadding">{fecha(fmodificacion.getFullYear()) + '/' + fecha(fmodificacion.getMonth()+1) + '/' + fecha(fmodificacion.getDate())}</div>
+            <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
+            <div className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding">
+              <div className="row sinmargin">
+                <a href="#?" className="mr-2"><img src={ver} style={tamano} /></a>
+                <a href="#?"><img src={opciones} style={tamano} /></a>
+              </div>
+            </div>
+          </div>
+        );
+      }
+    });
+
     return (
-      <div className="margin25">
-        <div className="row align-items-center sinmargin" style={{ margin: '10px 0px 10px 0px', padding: '10px', fontSize: '0.8em', boxShadow: '0 0 0 3px #ddd, 0 1px 1px 0px #777'}}>
-          <a href="#?" className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding"><img src={ficono2} style={tamano} /></a>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 sinpadding">
-            <div className="row sinmargin">
-              <div className="col-12 nombrefavorito sinpadding" style={{ fontSize: '0.9em' }}>NombreArchivo_Prueba_DFYG...</div>
-              <div className="col-12 nombrefavorito sinpadding">Descripción del archivo de prueba 27hbf</div>
-            </div>
-          </div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding">210.5%</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 sinpadding">03/08/2019</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 sinpadding">03/08/2019</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding">
-            <div className="row sinmargin">
-              <a href="#?" className="mr-2"><img src={ver} style={tamano} /></a>
-              <a href="#?"><img src={opciones} style={tamano} /></a>
-            </div>
-          </div>
-        </div>
-        <div className="row align-items-center sinmargin" style={{ margin: '10px 0px 10px 0px', padding: '10px', fontSize: '0.8em', boxShadow: '0 0 0 3px #ddd, 0 1px 1px 0px #777'}}>
-          <a href="#?" className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding"><img src={ficono2} style={tamano} /></a>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 sinpadding">
-            <div className="row sinmargin">
-              <div className="col-12 nombrefavorito sinpadding" style={{ fontSize: '0.9em' }}>NombreArchivo_Prueba_DFYG...</div>
-              <div className="col-12 nombrefavorito sinpadding">Descripción del archivo de prueba 27hbf</div>
-            </div>
-          </div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding">210.5%</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 sinpadding">03/08/2019</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 sinpadding">03/08/2019</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding">
-            <div className="row sinmargin">
-              <a href="#?" className="mr-2"><img src={ver} style={tamano} /></a>
-              <a href="#?"><img src={opciones} style={tamano} /></a>
-            </div>
-          </div>
-        </div>
-        <div className="row align-items-center sinmargin" style={{ margin: '10px 0px 10px 0px', padding: '10px', fontSize: '0.8em', boxShadow: '0 0 0 3px #ddd, 0 1px 1px 0px #777'}}>
-          <a href="#?" className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding"><img src={ficono2} style={tamano} /></a>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 sinpadding">
-            <div className="row sinmargin">
-              <div className="col-12 nombrefavorito sinpadding" style={{ fontSize: '0.9em' }}>NombreArchivo_Prueba_DFYG...</div>
-              <div className="col-12 nombrefavorito sinpadding">Descripción del archivo de prueba 27hbf</div>
-            </div>
-          </div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding">210.5%</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 sinpadding">03/08/2019</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 sinpadding">03/08/2019</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding">
-            <div className="row sinmargin">
-              <a href="#?" className="mr-2"><img src={ver} style={tamano} /></a>
-              <a href="#?"><img src={opciones} style={tamano} /></a>
-            </div>
-          </div>
-        </div>
-        <div className="row align-items-center sinmargin" style={{ margin: '10px 0px 10px 0px', padding: '10px', fontSize: '0.8em', boxShadow: '0 0 0 3px #ddd, 0 1px 1px 0px #777'}}>
-          <a href="#?" className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding"><img src={ficono2} style={tamano} /></a>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 sinpadding">
-            <div className="row sinmargin">
-              <div className="col-12 nombrefavorito sinpadding" style={{ fontSize: '0.9em' }}>NombreArchivo_Prueba_DFYG...</div>
-              <div className="col-12 nombrefavorito sinpadding">Descripción del archivo de prueba 27hbf</div>
-            </div>
-          </div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding">210.5%</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 sinpadding">03/08/2019</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 sinpadding">03/08/2019</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding">
-            <div className="row sinmargin">
-              <a href="#?" className="mr-2"><img src={ver} style={tamano} /></a>
-              <a href="#?"><img src={opciones} style={tamano} /></a>
-            </div>
-          </div>
-        </div>
-        <div className="row align-items-center sinmargin" style={{ margin: '10px 0px 10px 0px', padding: '10px', fontSize: '0.8em', boxShadow: '0 0 0 3px #ddd, 0 1px 1px 0px #777'}}>
-          <a href="#?" className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding"><img src={ficono2} style={tamano} /></a>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 sinpadding">
-            <div className="row sinmargin">
-              <div className="col-12 nombrefavorito sinpadding" style={{ fontSize: '0.9em' }}>NombreArchivo_Prueba_DFYG...</div>
-              <div className="col-12 nombrefavorito sinpadding">Descripción del archivo de prueba 27hbf</div>
-            </div>
-          </div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding">210.5%</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 sinpadding">03/08/2019</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 sinpadding">03/08/2019</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding">
-            <div className="row sinmargin">
-              <a href="#?" className="mr-2"><img src={ver} style={tamano} /></a>
-              <a href="#?"><img src={opciones} style={tamano} /></a>
-            </div>
-          </div>
-        </div>
-        <div className="row align-items-center sinmargin" style={{ margin: '10px 0px 10px 0px', padding: '10px', fontSize: '0.8em', boxShadow: '0 0 0 3px #ddd, 0 1px 1px 0px #777'}}>
-          <a href="#?" className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding"><img src={ficono2} style={tamano} /></a>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 sinpadding">
-            <div className="row sinmargin">
-              <div className="col-12 nombrefavorito sinpadding" style={{ fontSize: '0.9em' }}>NombreArchivo_Prueba_DFYG...</div>
-              <div className="col-12 nombrefavorito sinpadding">Descripción del archivo de prueba 27hbf</div>
-            </div>
-          </div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding">210.5%</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 sinpadding">03/08/2019</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 sinpadding">03/08/2019</div>
-          <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
-          <div className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding">
-            <div className="row sinmargin">
-              <a href="#?" className="mr-2"><img src={ver} style={tamano} /></a>
-              <a href="#?"><img src={opciones} style={tamano} /></a>
-            </div>
-          </div>
-        </div>
+      <div className="margin25" style={{ display: this.props.onStyle }}>
+        {completados}
+        <div className="row sinmargin">{drawHpBar}</div>
       </div>
     );
   }
