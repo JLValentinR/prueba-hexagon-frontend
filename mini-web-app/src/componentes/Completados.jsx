@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import '../css/completados.css';
 
-import ficono2 from '../img/ficono2.png';
+import ficono3 from '../img/ficono3.png';
 import ver from '../img/ver.jpg';
 import opciones from '../img/opciones.png';
-
-import Perfil from './Perfil';
-import Favoritos from './Favoritos';
 
 const { completados } = { "completados": [] };
 
@@ -82,7 +79,7 @@ class Completados extends Component {
       if(i >= this.state.menor && i < this.state.limite){
         return (
           <div className="row align-items-center marginshadow sinmargin" key={i}>
-            <a href="#?" className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding"><img src={ficono2} style={tamano} /></a>
+            <a href="#?" className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding"><img src={ficono3} style={tamano} /></a>
             <div className="d-sm-block d-md-block d-lg-none d-xl-none col-12 col-sm-12 col-md-12 separadorinferior"></div>
             <div className="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 sinpadding">
               <div className="row sinmargin">
