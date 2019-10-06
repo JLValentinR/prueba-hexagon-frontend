@@ -24,18 +24,20 @@ class Lateral extends Component {
   }
 
   componentWillReceiveProps(props){
-    if(this.props.onLateral){
-      this.setState({
-        lateral: false,
-        estilolateral: "d-none d-sm-none d-md-none d-lg-block d-xl-block col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 lateral sinpadding",
-        separacion: "row sinmargin separacion"
-      });
-    }else{
-      this.setState({
-        lateral: true,
-        estilolateral: "d-sm-block d-md-block d-lg-block d-xl-block col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 lateralabsoluto sinpadding",
-        separacion: "row sinmargin separacionmovil"
-      });
+    if(props.onValidador == 1){
+      if(this.props.onLateral){
+        this.setState({
+          lateral: false,
+          estilolateral: "d-none d-sm-none d-md-none d-lg-block d-xl-block col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 lateral sinpadding",
+          separacion: "row sinmargin separacion"
+        });
+      }else{
+        this.setState({
+          lateral: true,
+          estilolateral: "d-sm-block d-md-block d-lg-block d-xl-block col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 lateralabsoluto sinpadding",
+          separacion: "row sinmargin separacionmovil"
+        });
+      }
     }
   }
 
@@ -92,11 +94,11 @@ class Lateral extends Component {
           <div className="col-12 sinpadding">
             <div className="row sinmargin mt-3">
               <ul className="ul">
-                <li className="li"><div className="row align-items-center sinmargin" style={{ height: '60px' }}><div className="col-12 sinpadding"><img src={home} style={tamano} />&nbsp;&nbsp;El Camino S.A de C.V</div></div></li>
-                <li className="li"><div className="row align-items-center sinmargin" style={{ height: '60px' }}><div className="col-12 sinpadding"><img src={agregar} style={tamano} />&nbsp;&nbsp; Crear Segmento</div></div></li>
-                <li className="li"><div className="row align-items-center sinmargin" style={{ height: '60px' }}><div className="col-12 sinpadding"><img src={buscar} style={tamano} />&nbsp;&nbsp; Listado de Segmentos</div></div></li>
-                <li className="li"><div className="row align-items-center sinmargin" style={{ height: '60px' }}><div className="col-12 sinpadding"><img src={tag} style={tamano} />&nbsp;&nbsp;Nuevo Tag</div></div></li>
-                <li className="li"><div className="row align-items-center sinmargin" style={{ height: '60px' }}><div className="col-12 sinpadding"><img src={ajustes} style={tamano} />&nbsp;&nbsp;Configurar Destino</div></div></li>
+                <li className="li"><div className="row align-items-center sinmargin" style={{ height: '60px' }}><a href="#?" className="col-12 sinpadding" style={{ color: '#FFFFFF', textDecoration: 'none' }}><img src={home} style={tamano} />&nbsp;&nbsp;El Camino S.A de C.V</a></div></li>
+                <li className="li"><div className="row align-items-center sinmargin" style={{ height: '60px' }}><a href="#?" className="col-12 sinpadding" style={{ color: '#FFFFFF', textDecoration: 'none' }}><img src={agregar} style={tamano} />&nbsp;&nbsp; Crear Segmento</a></div></li>
+                <li className="li"><div className="row align-items-center sinmargin" style={{ height: '60px' }}><a href="#?" className="col-12 sinpadding" style={{ color: '#FFFFFF', textDecoration: 'none' }}><img src={buscar} style={tamano} />&nbsp;&nbsp; Listado de Segmentos</a></div></li>
+                <li className="li"><div className="row align-items-center sinmargin" style={{ height: '60px' }}><a href="#?" className="col-12 sinpadding" style={{ color: '#FFFFFF', textDecoration: 'none' }}><img src={tag} style={tamano} />&nbsp;&nbsp;Nuevo Tag</a></div></li>
+                <li className="li"><div className="row align-items-center sinmargin" style={{ height: '60px' }}><a href="#?" className="col-12 sinpadding" style={{ color: '#FFFFFF', textDecoration: 'none' }}><img src={ajustes} style={tamano} />&nbsp;&nbsp;Configurar Destino</a></div></li>
               </ul>
             </div>
           </div>

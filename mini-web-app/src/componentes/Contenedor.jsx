@@ -40,6 +40,9 @@ class Contenedor extends Component {
     this.handlerSegmentos = this.handlerSegmentos.bind(this);
     this.handlerCambiar = this.handlerCambiar.bind(this);
     this.handlerPeticion = this.handlerPeticion.bind(this);
+    this.handlerBuscar = this.handlerBuscar.bind(this);
+    this.handlerMostrarNuevo = this.handlerMostrarNuevo.bind(this);
+    this.handlerOrdenar = this.handlerOrdenar.bind(this);
   }
 
   handlerMostrar(count){
@@ -47,22 +50,31 @@ class Contenedor extends Component {
   }
 
   componentWillReceiveProps(props){
-    if(this.props.onLateral){
-      this.setState({
-        mostrar: "col-12 col-sm-12 col-md-12 col-lg-10 col-xl-10 contenedor sinpadding"
-      });
-    }else{
-      this.setState({
-        mostrar: "col-12 col-sm-12 col-md-12 col-lg-10 col-xl-10 contenedorhidden sinpadding"
-      });
+    if(props.onValidador == 1){
+      if(this.props.onLateral){
+        this.setState({
+          mostrar: "col-12 col-sm-12 col-md-12 col-lg-10 col-xl-10 contenedor sinpadding"
+        });
+      }else{
+        this.setState({
+          mostrar: "col-12 col-sm-12 col-md-12 col-lg-10 col-xl-10 contenedorhidden sinpadding"
+        });
+      }
+    }
+
+    if(props.onActualiza == 1){
+      this.handlerPeticion("/api/buscar/", this.state.buscar, 1, 0, this.handlerSegmentos, 'favoritos', 'id');
+      this.handlerPeticion("/api/buscar/", this.state.buscar, 2, 1, this.handlerSegmentos, 'completados', 'id');
+      this.handlerPeticion("/api/buscar/", this.state.buscar, 2, 2, this.handlerSegmentos, 'errores', 'id');
+      this.handlerPeticion("/api/buscar/", this.state.buscar, 2, 3, this.handlerSegmentos, 'procesos', 'id');
     }
   }
 
   componentDidMount(){
-    this.handlerPeticion("/api/buscar/", this.state.buscar, 1, 0, this.handlerSegmentos, 'favoritos');
-    this.handlerPeticion("/api/buscar/", this.state.buscar, 2, 1, this.handlerSegmentos, 'completados');
-    this.handlerPeticion("/api/buscar/", this.state.buscar, 2, 2, this.handlerSegmentos, 'errores');
-    this.handlerPeticion("/api/buscar/", this.state.buscar, 2, 3, this.handlerSegmentos, 'procesos');
+    this.handlerPeticion("/api/buscar/", this.state.buscar, 1, 0, this.handlerSegmentos, 'favoritos', 'id');
+    this.handlerPeticion("/api/buscar/", this.state.buscar, 2, 1, this.handlerSegmentos, 'completados', 'id');
+    this.handlerPeticion("/api/buscar/", this.state.buscar, 2, 2, this.handlerSegmentos, 'errores', 'id');
+    this.handlerPeticion("/api/buscar/", this.state.buscar, 2, 3, this.handlerSegmentos, 'procesos', 'id');
   }
 
   handlerChange(e){
@@ -72,16 +84,16 @@ class Contenedor extends Component {
       buscar: value.replace(/(<([^>]+)>)/ig, '')
     });
 
-    this.handlerPeticion("/api/buscar/", value.replace(/(<([^>]+)>)/ig, ''), 1, 0, this.handlerSegmentos, 'favoritos');
-    this.handlerPeticion("/api/buscar/", value.replace(/(<([^>]+)>)/ig, ''), 2, 1, this.handlerSegmentos, 'completados');
-    this.handlerPeticion("/api/buscar/", value.replace(/(<([^>]+)>)/ig, ''), 2, 2, this.handlerSegmentos, 'errores');
-    this.handlerPeticion("/api/buscar/", value.replace(/(<([^>]+)>)/ig, ''), 2, 3, this.handlerSegmentos, 'procesos');
+    this.handlerPeticion("/api/buscar/", value.replace(/(<([^>]+)>)/ig, ''), 1, 0, this.handlerSegmentos, 'favoritos', 'id');
+    this.handlerPeticion("/api/buscar/", value.replace(/(<([^>]+)>)/ig, ''), 2, 1, this.handlerSegmentos, 'completados', 'id');
+    this.handlerPeticion("/api/buscar/", value.replace(/(<([^>]+)>)/ig, ''), 2, 2, this.handlerSegmentos, 'errores', 'id');
+    this.handlerPeticion("/api/buscar/", value.replace(/(<([^>]+)>)/ig, ''), 2, 3, this.handlerSegmentos, 'procesos', 'id');
   }
 
-  handlerPeticion(url, palabra, numero, tipo, funcion, objeto){
+  handlerPeticion(url, palabra, numero, tipo, funcion, objeto, orden){
     fetch(url, {
       method: 'POST',
-      body: JSON.stringify({ palabra: palabra, numero: numero, tipo: tipo }),  
+      body: JSON.stringify({ palabra: palabra, numero: numero, tipo: tipo, orden: orden }),  
       headers:{
         'Content-Type': 'application/json'
       }
@@ -133,6 +145,21 @@ class Contenedor extends Component {
     }
   }
 
+  handlerBuscar(e){
+    e.preventDefault();
+  }
+
+  handlerMostrarNuevo(){
+    this.props.onNuevo('block', 2);
+  }
+
+  handlerOrdenar(e, a){
+    this.handlerPeticion("/api/buscar/", this.state.buscar, 1, 0, this.handlerSegmentos, 'favoritos', a);
+    this.handlerPeticion("/api/buscar/", this.state.buscar, 2, 1, this.handlerSegmentos, 'completados', a);
+    this.handlerPeticion("/api/buscar/", this.state.buscar, 2, 2, this.handlerSegmentos, 'errores', a);
+    this.handlerPeticion("/api/buscar/", this.state.buscar, 2, 3, this.handlerSegmentos, 'procesos', a);
+  }
+
   render(){
     let tamano = { width: '25px', height: '25px', background: '#FFFFFF', borderRadius: '50%' };
 
@@ -144,9 +171,9 @@ class Contenedor extends Component {
             <h2>Listado segmentos</h2>
           </div>
           <div className="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 mt-3 d-flex justify-content-center">
-            <a href="#?" className="nuevosegmento">NUEVO SEGMENTO</a>
+            <a href="#?" onClick={this.handlerMostrarNuevo} className="nuevosegmento">NUEVO SEGMENTO</a>
           </div>
-          <form className="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 mt-3 d-flex justify-content-center" autoComplete="off">
+          <form onSubmit={this.handlerBuscar} className="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 mt-3 d-flex justify-content-center" autoComplete="off">
             <input type="text" id="buscar" name="buscar" placeholder="Buscar" value={this.state.buscar} className="mr-1" style={{ fontStyle: 'italic' }} onChange={this.handlerChange} />
             <button><img src={buscar} style={tamano} /></button>
           </form>
@@ -163,24 +190,24 @@ class Contenedor extends Component {
         <div className="row align-items-center margin25" style={{ padding: '10px', fontWeight: 'bold', fontSize: '0.8em', background: '#C6E1B1'}}>
           <a href="#?" className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding"></a>
           <div className="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5 mt-3 mb-3 sinpadding">
-            <div className="row align-items-center sinmargin">
+            <a href="#?" className="row align-items-center sinmargin" style={{ color: '#000000', textDecoration: 'none' }} onClick={(e) => {this.handlerOrdenar(e, 'snombre')}}>
               Nombre del archivo <img src={flechas} style={{ width: '12px', height: '12px', marginLeft: '10px' }} />
-            </div>
+            </a>
           </div>
           <div className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 mt-3 mb-3 sinpadding">
-            <div className="row align-items-center sinmargin">
+            <a href="#?" className="row align-items-center sinmargin" style={{ color: '#000000', textDecoration: 'none' }} onClick={(e) => {this.handlerOrdenar(e, 'smatch')}}>
               Match rate <img src={flechas} style={{ width: '12px', height: '12px', marginLeft: '10px' }} />
-            </div>
+            </a>
           </div>
           <div className="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 mt-3 mb-3 sinpadding">
-            <div className="row align-items-center sinmargin">
+            <a href="#?" className="row align-items-center sinmargin" style={{ color: '#000000', textDecoration: 'none' }} onClick={(e) => {this.handlerOrdenar(e, 'ssubida')}}>
               Fecha subida <img src={flechas} style={{ width: '12px', height: '12px', marginLeft: '10px' }} />
-            </div>
+            </a>
           </div>
           <div className="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 mt-3 mb-3 sinpadding">
-            <div className="row align-items-center sinmargin">
+            <a href="#?" className="row align-items-center sinmargin" style={{ color: '#000000', textDecoration: 'none' }} onClick={(e) => {this.handlerOrdenar(e, 'smodificacion')}}>
               Fecha de actualización <img src={flechas} style={{ width: '12px', height: '12px', marginLeft: '10px' }} />
-            </div>
+            </a>
           </div>
           <div className="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1 sinpadding"></div>
         </div>
